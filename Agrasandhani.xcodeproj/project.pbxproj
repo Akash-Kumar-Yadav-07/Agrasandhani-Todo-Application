@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		38190F1C2E74A3C9000DA56E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38190F002E74A3C8000DA56E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38190F072E74A3C8000DA56E;
+			remoteInfo = Agrasandhani;
+		};
+		38190F262E74A3C9000DA56E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38190F002E74A3C8000DA56E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38190F072E74A3C8000DA56E;
+			remoteInfo = Agrasandhani;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		38190F082E74A3C8000DA56E /* Agrasandhani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Agrasandhani.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		38190F1B2E74A3C9000DA56E /* AgrasandhaniTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgrasandhaniTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		38190F252E74A3C9000DA56E /* AgrasandhaniUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgrasandhaniUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		38190F0A2E74A3C8000DA56E /* Agrasandhani */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Agrasandhani;
+			sourceTree = "<group>";
+		};
+		38190F1E2E74A3C9000DA56E /* AgrasandhaniTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AgrasandhaniTests;
+			sourceTree = "<group>";
+		};
+		38190F282E74A3C9000DA56E /* AgrasandhaniUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AgrasandhaniUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		38190F052E74A3C8000DA56E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38190F182E74A3C9000DA56E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38190F222E74A3C9000DA56E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		38190EFF2E74A3C8000DA56E = {
+			isa = PBXGroup;
+			children = (
+				38190F0A2E74A3C8000DA56E /* Agrasandhani */,
+				38190F1E2E74A3C9000DA56E /* AgrasandhaniTests */,
+				38190F282E74A3C9000DA56E /* AgrasandhaniUITests */,
+				38190F092E74A3C8000DA56E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		38190F092E74A3C8000DA56E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				38190F082E74A3C8000DA56E /* Agrasandhani.app */,
+				38190F1B2E74A3C9000DA56E /* AgrasandhaniTests.xctest */,
+				38190F252E74A3C9000DA56E /* AgrasandhaniUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		38190F072E74A3C8000DA56E /* Agrasandhani */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38190F2F2E74A3C9000DA56E /* Build configuration list for PBXNativeTarget "Agrasandhani" */;
+			buildPhases = (
+				38190F042E74A3C8000DA56E /* Sources */,
+				38190F052E74A3C8000DA56E /* Frameworks */,
+				38190F062E74A3C8000DA56E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				38190F0A2E74A3C8000DA56E /* Agrasandhani */,
+			);
+			name = Agrasandhani;
+			packageProductDependencies = (
+			);
+			productName = Agrasandhani;
+			productReference = 38190F082E74A3C8000DA56E /* Agrasandhani.app */;
+			productType = "com.apple.product-type.application";
+		};
+		38190F1A2E74A3C9000DA56E /* AgrasandhaniTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38190F322E74A3C9000DA56E /* Build configuration list for PBXNativeTarget "AgrasandhaniTests" */;
+			buildPhases = (
+				38190F172E74A3C9000DA56E /* Sources */,
+				38190F182E74A3C9000DA56E /* Frameworks */,
+				38190F192E74A3C9000DA56E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				38190F1D2E74A3C9000DA56E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				38190F1E2E74A3C9000DA56E /* AgrasandhaniTests */,
+			);
+			name = AgrasandhaniTests;
+			packageProductDependencies = (
+			);
+			productName = AgrasandhaniTests;
+			productReference = 38190F1B2E74A3C9000DA56E /* AgrasandhaniTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		38190F242E74A3C9000DA56E /* AgrasandhaniUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38190F352E74A3C9000DA56E /* Build configuration list for PBXNativeTarget "AgrasandhaniUITests" */;
+			buildPhases = (
+				38190F212E74A3C9000DA56E /* Sources */,
+				38190F222E74A3C9000DA56E /* Frameworks */,
+				38190F232E74A3C9000DA56E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				38190F272E74A3C9000DA56E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				38190F282E74A3C9000DA56E /* AgrasandhaniUITests */,
+			);
+			name = AgrasandhaniUITests;
+			packageProductDependencies = (
+			);
+			productName = AgrasandhaniUITests;
+			productReference = 38190F252E74A3C9000DA56E /* AgrasandhaniUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		38190F002E74A3C8000DA56E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					38190F072E74A3C8000DA56E = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					38190F1A2E74A3C9000DA56E = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 38190F072E74A3C8000DA56E;
+					};
+					38190F242E74A3C9000DA56E = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 38190F072E74A3C8000DA56E;
+					};
+				};
+			};
+			buildConfigurationList = 38190F032E74A3C8000DA56E /* Build configuration list for PBXProject "Agrasandhani" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 38190EFF2E74A3C8000DA56E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 38190F092E74A3C8000DA56E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				38190F072E74A3C8000DA56E /* Agrasandhani */,
+				38190F1A2E74A3C9000DA56E /* AgrasandhaniTests */,
+				38190F242E74A3C9000DA56E /* AgrasandhaniUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		38190F062E74A3C8000DA56E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38190F192E74A3C9000DA56E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38190F232E74A3C9000DA56E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		38190F042E74A3C8000DA56E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38190F172E74A3C9000DA56E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38190F212E74A3C9000DA56E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		38190F1D2E74A3C9000DA56E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38190F072E74A3C8000DA56E /* Agrasandhani */;
+			targetProxy = 38190F1C2E74A3C9000DA56E /* PBXContainerItemProxy */;
+		};
+		38190F272E74A3C9000DA56E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38190F072E74A3C8000DA56E /* Agrasandhani */;
+			targetProxy = 38190F262E74A3C9000DA56E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		38190F2D2E74A3C9000DA56E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		38190F2E2E74A3C9000DA56E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		38190F302E74A3C9000DA56E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Agrasandhani/Agrasandhani.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.systemtools.backgroundservice.Agrasandhani;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		38190F312E74A3C9000DA56E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Agrasandhani/Agrasandhani.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.systemtools.backgroundservice.Agrasandhani;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		38190F332E74A3C9000DA56E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.systemtools.backgroundservice.AgrasandhaniTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Agrasandhani.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Agrasandhani";
+			};
+			name = Debug;
+		};
+		38190F342E74A3C9000DA56E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.systemtools.backgroundservice.AgrasandhaniTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Agrasandhani.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Agrasandhani";
+			};
+			name = Release;
+		};
+		38190F362E74A3C9000DA56E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.systemtools.backgroundservice.AgrasandhaniUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Agrasandhani;
+			};
+			name = Debug;
+		};
+		38190F372E74A3C9000DA56E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.systemtools.backgroundservice.AgrasandhaniUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Agrasandhani;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		38190F032E74A3C8000DA56E /* Build configuration list for PBXProject "Agrasandhani" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38190F2D2E74A3C9000DA56E /* Debug */,
+				38190F2E2E74A3C9000DA56E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38190F2F2E74A3C9000DA56E /* Build configuration list for PBXNativeTarget "Agrasandhani" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38190F302E74A3C9000DA56E /* Debug */,
+				38190F312E74A3C9000DA56E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38190F322E74A3C9000DA56E /* Build configuration list for PBXNativeTarget "AgrasandhaniTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38190F332E74A3C9000DA56E /* Debug */,
+				38190F342E74A3C9000DA56E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38190F352E74A3C9000DA56E /* Build configuration list for PBXNativeTarget "AgrasandhaniUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38190F362E74A3C9000DA56E /* Debug */,
+				38190F372E74A3C9000DA56E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 38190F002E74A3C8000DA56E /* Project object */;
+}
