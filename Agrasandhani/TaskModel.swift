@@ -102,6 +102,79 @@ enum RecurrencePattern: String, CaseIterable {
     }
 }
 
+// MARK: - Date Filter
+enum DateFilter: String, CaseIterable {
+    case all = "all"
+    case today = "today"
+    case tomorrow = "tomorrow"
+    case thisWeek = "thisWeek"
+    case overdue = "overdue"
+    case noDueDate = "noDueDate"
+    
+    var displayName: String {
+        switch self {
+        case .all:
+            return "All Dates"
+        case .today:
+            return "Today"
+        case .tomorrow:
+            return "Tomorrow"
+        case .thisWeek:
+            return "This Week"
+        case .overdue:
+            return "Overdue"
+        case .noDueDate:
+            return "No Due Date"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .all:
+            return "calendar"
+        case .today:
+            return "calendar.circle"
+        case .tomorrow:
+            return "calendar.badge.plus"
+        case .thisWeek:
+            return "calendar.circle.fill"
+        case .overdue:
+            return "calendar.badge.exclamationmark"
+        case .noDueDate:
+            return "calendar.badge.minus"
+        }
+    }
+}
+
+// MARK: - Status Filter
+enum StatusFilter: String, CaseIterable {
+    case all = "all"
+    case pending = "pending"
+    case completed = "completed"
+    
+    var displayName: String {
+        switch self {
+        case .all:
+            return "All Tasks"
+        case .pending:
+            return "Pending"
+        case .completed:
+            return "Completed"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .all:
+            return "list.bullet"
+        case .pending:
+            return "circle"
+        case .completed:
+            return "checkmark.circle.fill"
+        }
+    }
+}
+
 // MARK: - Task Extensions
 extension Task {
     var categoryEnum: TaskCategory {
@@ -145,6 +218,15 @@ extension Task {
     var isDueTomorrow: Bool {
         guard let dueDate = dueDate else { return false }
         return Calendar.current.isDateInTomorrow(dueDate)
+    }
+    
+    var isDueThisWeek: Bool {
+        guard let dueDate = dueDate else { return false }
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? now
+        let endOfWeek = calendar.dateInterval(of: .weekOfYear, for: now)?.end ?? now
+        return dueDate >= startOfWeek && dueDate <= endOfWeek
     }
     
     var formattedDueDate: String {

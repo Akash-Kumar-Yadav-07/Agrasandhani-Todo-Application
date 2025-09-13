@@ -15,6 +15,13 @@ struct ContentView: View {
     @State private var showingAddTask = false
     @State private var selectedCategory: TaskCategory? = nil
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var searchText = ""
+    
+    // Advanced Filter States
+    @State private var selectedDateFilter: DateFilter = .all
+    @State private var selectedStatusFilter: StatusFilter = .all
+    @State private var selectedPriorityFilter: TaskPriority? = nil
+    @State private var showAdvancedFilters = false
 
     @FetchRequest(
         sortDescriptors: [
@@ -35,6 +42,10 @@ struct ContentView: View {
                 // Category Filter  
                 categoryFilter
                     .frame(height: 60)
+                
+                // Search Bar with Filter Button
+                searchBarWithFilters
+                    .frame(height: 50)
                 
                 // Tasks List
                 tasksList
@@ -186,6 +197,102 @@ struct ContentView: View {
         .buttonStyle(.plain)
     }
     
+    // MARK: - Search Bar with Filters
+    private var searchBarWithFilters: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: AgrasandhaniTheme.Spacing.sm) {
+                // Search Icon
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(AgrasandhaniTheme.Colors.divineAccent)
+                    .font(.callout)
+                
+                // Search Field
+                TextField("Search tasks...", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .font(AgrasandhaniTheme.Typography.bodyFont)
+                    .foregroundColor(AgrasandhaniTheme.Colors.primaryText)
+                
+                // Clear Search Button
+                if !searchText.isEmpty {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            searchText = ""
+                        }
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(AgrasandhaniTheme.Colors.secondaryText)
+                            .font(.callout)
+                    }
+                    .buttonStyle(.plain)
+                }
+                
+                // Filter Button
+                Button {
+                    showAdvancedFilters = true
+                } label: {
+                    HStack(spacing: AgrasandhaniTheme.Spacing.xxs) {
+                        Image(systemName: "slider.horizontal.3")
+                            .font(.callout)
+                        
+                        if hasActiveFilters {
+                            Circle()
+                                .fill(AgrasandhaniTheme.Colors.criticalRed)
+                                .frame(width: 6, height: 6)
+                        }
+                    }
+                    .foregroundColor(hasActiveFilters ? AgrasandhaniTheme.Colors.divineAccent : AgrasandhaniTheme.Colors.secondaryText)
+                    .frame(minWidth: 32, minHeight: 32) // Ensure minimum tappable area
+                    .background(
+                        RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.small)
+                            .fill(hasActiveFilters ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.1) : Color.clear)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.small)
+                                    .stroke(hasActiveFilters ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.3) : Color.clear, lineWidth: 1)
+                            )
+                    )
+                    .contentShape(Rectangle()) // Make entire area tappable
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
+            .padding(.vertical, AgrasandhaniTheme.Spacing.sm)
+            .background(
+                RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                    .fill(AgrasandhaniTheme.Colors.cardBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                            .stroke(AgrasandhaniTheme.Colors.divineAccent.opacity(0.3), lineWidth: 1)
+                    )
+            )
+            .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
+            .padding(.vertical, AgrasandhaniTheme.Spacing.xs)
+            .background(AgrasandhaniTheme.Colors.secondaryBackground)
+            
+            Divider()
+                .background(AgrasandhaniTheme.Colors.divineAccent.opacity(0.2))
+        }
+        .sheet(isPresented: $showAdvancedFilters) {
+            AdvancedFiltersSheet(
+                selectedDateFilter: $selectedDateFilter,
+                selectedStatusFilter: $selectedStatusFilter,
+                selectedPriorityFilter: $selectedPriorityFilter,
+                hasActiveFilters: hasActiveFilters,
+                clearAllFilters: clearAllFilters
+            )
+        }
+    }
+    
+    // Helper computed properties
+    private var hasActiveFilters: Bool {
+        selectedDateFilter != .all || selectedStatusFilter != .all || selectedPriorityFilter != nil
+    }
+    
+    private func clearAllFilters() {
+        selectedDateFilter = .all
+        selectedStatusFilter = .all
+        selectedPriorityFilter = nil
+    }
+    
     // MARK: - Tasks List
     private var tasksList: some View {
         List {
@@ -193,13 +300,14 @@ struct ContentView: View {
                 TaskRowView(task: task, isDarkMode: isDarkMode)
                     .listRowBackground(AgrasandhaniTheme.Colors.primaryBackground)
                     .listRowSeparator(.hidden)
-                    .padding(.vertical, AgrasandhaniTheme.Spacing.xs)
+                    .listRowInsets(EdgeInsets(top: AgrasandhaniTheme.Spacing.xs, leading: AgrasandhaniTheme.Spacing.md, bottom: AgrasandhaniTheme.Spacing.xs, trailing: AgrasandhaniTheme.Spacing.md))
             }
             .onDelete(perform: deleteTasks)
         }
         .listStyle(.plain)
         .background(AgrasandhaniTheme.Colors.primaryBackground)
         .scrollContentBackground(.hidden)
+        .clipped()
     }
     
     // MARK: - Add Task Button
@@ -311,10 +419,72 @@ struct ContentView: View {
     }
     
     private var filteredTasks: [Task] {
+        var filtered = Array(tasks)
+        
+        // Apply category filter (existing functionality)
         if let selectedCategory = selectedCategory {
-            return tasks.filter { $0.categoryEnum == selectedCategory }
+            filtered = filtered.filter { $0.categoryEnum == selectedCategory }
         }
-        return Array(tasks)
+        
+        // Apply search filter
+        if !searchText.isEmpty {
+            filtered = filtered.filter { task in
+                // Search in title
+                if let title = task.title, title.localizedCaseInsensitiveContains(searchText) {
+                    return true
+                }
+                
+                // Search in notes
+                if let notes = task.notes, notes.localizedCaseInsensitiveContains(searchText) {
+                    return true
+                }
+                
+                // Search in category
+                if task.categoryEnum.rawValue.localizedCaseInsensitiveContains(searchText) {
+                    return true
+                }
+                
+                // Search in priority
+                if task.priorityEnum.name.localizedCaseInsensitiveContains(searchText) {
+                    return true
+                }
+                
+                return false
+            }
+        }
+        
+        // Apply date filter
+        switch selectedDateFilter {
+        case .all:
+            break
+        case .today:
+            filtered = filtered.filter { $0.isDueToday }
+        case .tomorrow:
+            filtered = filtered.filter { $0.isDueTomorrow }
+        case .thisWeek:
+            filtered = filtered.filter { $0.isDueThisWeek }
+        case .overdue:
+            filtered = filtered.filter { $0.isOverdue }
+        case .noDueDate:
+            filtered = filtered.filter { $0.dueDate == nil }
+        }
+        
+        // Apply status filter
+        switch selectedStatusFilter {
+        case .all:
+            break
+        case .pending:
+            filtered = filtered.filter { !$0.isCompleted }
+        case .completed:
+            filtered = filtered.filter { $0.isCompleted }
+        }
+        
+        // Apply priority filter
+        if let selectedPriority = selectedPriorityFilter {
+            filtered = filtered.filter { $0.priorityEnum == selectedPriority }
+        }
+        
+        return filtered
     }
     
     // MARK: - Methods
@@ -830,25 +1000,29 @@ struct CancelButton: View {
     @State private var isHovered = false
     
     var body: some View {
-        Button("Cancel", action: action)
-            .foregroundColor(AgrasandhaniTheme.Colors.primaryText)
-            .padding(AgrasandhaniTheme.Spacing.md)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
-                    .fill(isHovered ? AgrasandhaniTheme.Colors.secondaryBackground : AgrasandhaniTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
-                            .stroke(isHovered ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.4) : AgrasandhaniTheme.Colors.secondaryText.opacity(0.2), lineWidth: 1)
-                    )
-            )
-            .scaleEffect(isHovered ? 1.02 : 1.0)
-            .buttonStyle(.plain)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHovered = hovering
-                }
+        Button {
+            action()
+        } label: {
+            Text("Cancel")
+                .foregroundColor(AgrasandhaniTheme.Colors.primaryText)
+                .padding(AgrasandhaniTheme.Spacing.md)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                        .fill(isHovered ? AgrasandhaniTheme.Colors.secondaryBackground : AgrasandhaniTheme.Colors.cardBackground)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                                .stroke(isHovered ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.4) : AgrasandhaniTheme.Colors.secondaryText.opacity(0.2), lineWidth: 1)
+                        )
+                )
+                .scaleEffect(isHovered ? 1.02 : 1.0)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isHovered = hovering
             }
+        }
     }
 }
 
@@ -858,24 +1032,28 @@ struct SaveButton: View {
     @State private var isHovered = false
     
     var body: some View {
-        Button("Add to Divine Ledger", action: action)
-            .foregroundColor(.white)
-            .padding(AgrasandhaniTheme.Spacing.md)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
-                    .fill(backgroundGradient)
-            )
-            .disabled(!isEnabled)
-            .opacity(isEnabled ? 1.0 : 0.6)
-            .scaleEffect(isHovered && isEnabled ? 1.02 : 1.0)
-            .shadow(color: isHovered && isEnabled ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.3) : Color.clear, radius: 8, x: 0, y: 2)
-            .buttonStyle(.plain)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHovered = hovering && isEnabled
-                }
+        Button {
+            action()
+        } label: {
+            Text("Add to Divine Ledger")
+                .foregroundColor(.white)
+                .padding(AgrasandhaniTheme.Spacing.md)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                        .fill(backgroundGradient)
+                )
+                .opacity(isEnabled ? 1.0 : 0.6)
+                .scaleEffect(isHovered && isEnabled ? 1.02 : 1.0)
+                .shadow(color: isHovered && isEnabled ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.3) : Color.clear, radius: 8, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isHovered = hovering && isEnabled
             }
+        }
     }
     
     private var backgroundGradient: LinearGradient {
@@ -895,6 +1073,248 @@ struct SaveButton: View {
                 endPoint: .bottomTrailing
             )
         }
+    }
+}
+
+// MARK: - Advanced Filters Sheet
+struct AdvancedFiltersSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var selectedDateFilter: DateFilter
+    @Binding var selectedStatusFilter: StatusFilter  
+    @Binding var selectedPriorityFilter: TaskPriority?
+    let hasActiveFilters: Bool
+    let clearAllFilters: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            VStack(spacing: AgrasandhaniTheme.Spacing.sm) {
+                HStack {
+                    Spacer()
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(AgrasandhaniTheme.Colors.secondaryText)
+                    }
+                    .buttonStyle(.plain)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
+                }
+                .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
+                .padding(.top, AgrasandhaniTheme.Spacing.sm)
+                
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 32))
+                    .foregroundColor(AgrasandhaniTheme.Colors.divineAccent)
+                    .darkModeGlow()
+                
+                Text("Advanced Filters")
+                    .font(AgrasandhaniTheme.Typography.titleFont)
+                    .foregroundColor(AgrasandhaniTheme.Colors.primaryText)
+                
+                Text("Refine your search with precise filtering")
+                    .font(AgrasandhaniTheme.Typography.captionFont)
+                    .foregroundColor(AgrasandhaniTheme.Colors.secondaryText)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.bottom, AgrasandhaniTheme.Spacing.lg)
+            
+            // Filters Content
+            ScrollView {
+                VStack(spacing: AgrasandhaniTheme.Spacing.lg) {
+                    // Date Filters
+                    filterSection(title: "Date", icon: "calendar") {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: AgrasandhaniTheme.Spacing.xs) {
+                            ForEach(DateFilter.allCases, id: \.self) { filter in
+                                filterChip(
+                                    title: filter.displayName,
+                                    icon: filter.icon,
+                                    isSelected: selectedDateFilter == filter
+                                ) {
+                                    selectedDateFilter = filter
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Status Filters
+                    filterSection(title: "Status", icon: "checkmark.circle") {
+                        HStack(spacing: AgrasandhaniTheme.Spacing.xs) {
+                            ForEach(StatusFilter.allCases, id: \.self) { filter in
+                                filterChip(
+                                    title: filter.displayName,
+                                    icon: filter.icon,
+                                    isSelected: selectedStatusFilter == filter
+                                ) {
+                                    selectedStatusFilter = filter
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Priority Filters
+                    filterSection(title: "Priority", icon: "exclamationmark.triangle") {
+                        VStack(spacing: AgrasandhaniTheme.Spacing.xs) {
+                            HStack(spacing: AgrasandhaniTheme.Spacing.xs) {
+                                filterChip(
+                                    title: "All Priorities",
+                                    icon: "list.bullet",
+                                    isSelected: selectedPriorityFilter == nil
+                                ) {
+                                    selectedPriorityFilter = nil
+                                }
+                                
+                                filterChip(
+                                    title: TaskPriority.low.name,
+                                    icon: "circle.fill",
+                                    isSelected: selectedPriorityFilter == .low,
+                                    color: TaskPriority.low.color
+                                ) {
+                                    selectedPriorityFilter = .low
+                                }
+                            }
+                            
+                            HStack(spacing: AgrasandhaniTheme.Spacing.xs) {
+                                filterChip(
+                                    title: TaskPriority.medium.name,
+                                    icon: "circle.fill",
+                                    isSelected: selectedPriorityFilter == .medium,
+                                    color: TaskPriority.medium.color
+                                ) {
+                                    selectedPriorityFilter = .medium
+                                }
+                                
+                                filterChip(
+                                    title: TaskPriority.high.name,
+                                    icon: "circle.fill",
+                                    isSelected: selectedPriorityFilter == .high,
+                                    color: TaskPriority.high.color
+                                ) {
+                                    selectedPriorityFilter = .high
+                                }
+                            }
+                            
+                            filterChip(
+                                title: TaskPriority.critical.name,
+                                icon: "circle.fill",
+                                isSelected: selectedPriorityFilter == .critical,
+                                color: TaskPriority.critical.color
+                            ) {
+                                selectedPriorityFilter = .critical
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
+            }
+            
+            // Bottom Actions
+            VStack(spacing: AgrasandhaniTheme.Spacing.md) {
+                Divider()
+                    .background(AgrasandhaniTheme.Colors.divineAccent.opacity(0.3))
+                
+                HStack(spacing: AgrasandhaniTheme.Spacing.md) {
+                    // Clear All Button
+                    if hasActiveFilters {
+                        Button {
+                            clearAllFilters()
+                        } label: {
+                            Text("Clear All")
+                                .foregroundColor(AgrasandhaniTheme.Colors.criticalRed)
+                                .padding(AgrasandhaniTheme.Spacing.md)
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                                .background(
+                                    RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                                        .fill(AgrasandhaniTheme.Colors.cardBackground)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                                                .stroke(AgrasandhaniTheme.Colors.criticalRed.opacity(0.3), lineWidth: 1)
+                                        )
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    
+                    // Apply Filters Button
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Apply Filters")
+                            .foregroundColor(.white)
+                            .padding(AgrasandhaniTheme.Spacing.md)
+                            .frame(maxWidth: .infinity, minHeight: 48)
+                            .background(
+                                RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                                    .fill(AgrasandhaniTheme.Colors.divineAccent)
+                            )
+                            .motivationalGlow()
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
+                .padding(.bottom, AgrasandhaniTheme.Spacing.md)
+            }
+        }
+        .background(AgrasandhaniTheme.Colors.primaryBackground)
+    }
+    
+    // Helper function for filter sections
+    private func filterSection<Content: View>(title: String, icon: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: AgrasandhaniTheme.Spacing.sm) {
+            HStack(spacing: AgrasandhaniTheme.Spacing.xs) {
+                Image(systemName: icon)
+                    .foregroundColor(AgrasandhaniTheme.Colors.divineAccent)
+                    .font(.callout)
+                
+                Text(title)
+                    .font(AgrasandhaniTheme.Typography.captionFont)
+                    .fontWeight(.semibold)
+                    .foregroundColor(AgrasandhaniTheme.Colors.primaryText)
+            }
+            
+            content()
+        }
+        .padding(AgrasandhaniTheme.Spacing.md)
+        .background(
+            RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                .fill(AgrasandhaniTheme.Colors.cardBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
+                        .stroke(AgrasandhaniTheme.Colors.divineAccent.opacity(0.2), lineWidth: 1)
+                )
+        )
+    }
+    
+    // Helper function for filter chips
+    private func filterChip(title: String, icon: String, isSelected: Bool, color: Color? = nil, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: AgrasandhaniTheme.Spacing.xs) {
+                Image(systemName: icon)
+                    .font(.caption)
+                    .foregroundColor(color ?? (isSelected ? AgrasandhaniTheme.Colors.divineAccent : AgrasandhaniTheme.Colors.secondaryText))
+                
+                Text(title)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, AgrasandhaniTheme.Spacing.sm)
+            .padding(.vertical, AgrasandhaniTheme.Spacing.xs)
+            .frame(maxWidth: .infinity, minHeight: 32)
+            .background(
+                RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.small)
+                    .fill(isSelected ? (color?.opacity(0.2) ?? AgrasandhaniTheme.Colors.divineAccent.opacity(0.2)) : AgrasandhaniTheme.Colors.secondaryBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.small)
+                            .stroke(isSelected ? (color ?? AgrasandhaniTheme.Colors.divineAccent) : AgrasandhaniTheme.Colors.secondaryText.opacity(0.3), lineWidth: 1)
+                    )
+            )
+            .foregroundColor(isSelected ? (color ?? AgrasandhaniTheme.Colors.divineAccent) : AgrasandhaniTheme.Colors.primaryText)
+        }
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
     }
 }
 
