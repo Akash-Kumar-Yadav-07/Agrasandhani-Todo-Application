@@ -116,7 +116,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - Inspired by the divine wisdom of **Chitragupta** and Hindu mythology
 - Built with love for productivity and spiritual aesthetics
-- Created with assistance from Claude Code for comprehensive development
+- Developed with passion for combining technology with spiritual themes
 
 ---
 
