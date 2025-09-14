@@ -103,9 +103,13 @@ struct ContentView: View {
         GeometryReader { geometry in
             VStack(spacing: AgrasandhaniTheme.Spacing.sm) {
                 HStack(spacing: AgrasandhaniTheme.Spacing.xs) {
-                    Image(systemName: "scroll")
-                        .font(geometry.size.width < 350 ? .title3 : .title2)
-                        .foregroundColor(AgrasandhaniTheme.Colors.divineAccent)
+                    // Custom Agrasandhani Logo
+                    Image("agrasandhani-logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: geometry.size.width < 350 ? 24 : 28, height: geometry.size.width < 350 ? 24 : 28)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                        .shadow(color: AgrasandhaniTheme.Colors.divineAccent.opacity(0.3), radius: 2, x: 0, y: 1)
                     
                     Text("अग्रसन्धानी")
                         .font(geometry.size.width < 350 ? .title2 : AgrasandhaniTheme.Typography.titleFont)
@@ -386,9 +390,13 @@ struct ContentView: View {
     // MARK: - Welcome View
     private var divineWelcomeView: some View {
         VStack(spacing: AgrasandhaniTheme.Spacing.lg) {
-            Image(systemName: "scroll.fill")
-                .font(.system(size: 60))
-                .foregroundColor(AgrasandhaniTheme.Colors.divineAccent)
+            // Large logo for welcome screen
+            Image("agrasandhani-logo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 80, height: 80)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .shadow(color: AgrasandhaniTheme.Colors.divineAccent.opacity(0.4), radius: 8, x: 0, y: 4)
                 .darkModeGlow()
             
             VStack(spacing: AgrasandhaniTheme.Spacing.md) {
