@@ -13,6 +13,9 @@
         <attribute name="recurrencePattern" optional="YES" attributeType="String"/>
         <attribute name="createdDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="completedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sortOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isExpanded" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="parentTaskID" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="Task" positionX="-63" positionY="-18" width="128" height="223"/>

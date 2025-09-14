@@ -10,19 +10,24 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var themeManager: ThemeManager
     @AppStorage("isDarkMode") private var isDarkModeStorage: Bool = true
     @State private var isDarkMode: Bool = true
     @State private var showingAddTask = false
     @State private var selectedCategory: TaskCategory? = nil
     @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var searchText = ""
+    @State private var selectedTaskForDetail: Task? = nil
+    @State private var showingTaskDetail = false
     
     // Advanced Filter States
     @State private var selectedDateFilter: DateFilter = .all
     @State private var selectedStatusFilter: StatusFilter = .all
     @State private var selectedPriorityFilter: TaskPriority? = nil
     @State private var showAdvancedFilters = false
-
+    
+    // Quick Actions
+    @StateObject private var quickActionManager = QuickActionManager.shared
     @FetchRequest(
         sortDescriptors: [
             NSSortDescriptor(keyPath: \Task.isCompleted, ascending: true),
@@ -43,9 +48,9 @@ struct ContentView: View {
                 categoryFilter
                     .frame(height: 60)
                 
-                // Search Bar with Filter Button
+                // Search Bar with Filters
                 searchBarWithFilters
-                    .frame(height: 50)
+                    .frame(height: 40)
                 
                 // Tasks List
                 tasksList
@@ -61,11 +66,18 @@ struct ContentView: View {
             }
             .toolbarBackground(AgrasandhaniTheme.Colors.secondaryBackground, for: .automatic)
             .toolbarColorScheme(isDarkMode ? .dark : .light, for: .automatic)
-            .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
         } detail: {
-            divineWelcomeView
+            // Task Detail Sidebar or Welcome View
+            if showingTaskDetail, let selectedTask = selectedTaskForDetail {
+                TaskDetailSidebar(task: selectedTask, isPresented: $showingTaskDetail)
+                    .environmentObject(themeManager)
+                    .id(selectedTask.objectID) // Force view refresh when task changes
+            } else {
+                divineWelcomeView
+            }
         }
         .navigationSplitViewStyle(.balanced)
+        .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
         .background(AgrasandhaniTheme.Colors.primaryBackground)
         .toolbarBackground(AgrasandhaniTheme.Colors.primaryBackground, for: .windowToolbar)
         .toolbarColorScheme(isDarkMode ? .dark : .light, for: .windowToolbar)
@@ -80,6 +92,9 @@ struct ContentView: View {
         }
         .onChange(of: isDarkModeStorage) {
             isDarkMode = isDarkModeStorage
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            // App became active - you can add any refresh logic here if needed
         }
     }
     
@@ -197,7 +212,7 @@ struct ContentView: View {
         .buttonStyle(.plain)
     }
     
-    // MARK: - Search Bar with Filters
+    // MARK: - Search Bar with Filters and Multi-Select
     private var searchBarWithFilters: some View {
         VStack(spacing: 0) {
             HStack(spacing: AgrasandhaniTheme.Spacing.sm) {
@@ -206,7 +221,7 @@ struct ContentView: View {
                     .foregroundColor(AgrasandhaniTheme.Colors.divineAccent)
                     .font(.callout)
                 
-                // Search Field
+                // Search Field (reduced width)
                 TextField("Search tasks...", text: $searchText)
                     .textFieldStyle(.plain)
                     .font(AgrasandhaniTheme.Typography.bodyFont)
@@ -226,6 +241,7 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                 }
                 
+                
                 // Filter Button
                 Button {
                     showAdvancedFilters = true
@@ -241,7 +257,7 @@ struct ContentView: View {
                         }
                     }
                     .foregroundColor(hasActiveFilters ? AgrasandhaniTheme.Colors.divineAccent : AgrasandhaniTheme.Colors.secondaryText)
-                    .frame(minWidth: 32, minHeight: 32) // Ensure minimum tappable area
+                    .frame(minWidth: 32, minHeight: 32)
                     .background(
                         RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.small)
                             .fill(hasActiveFilters ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.1) : Color.clear)
@@ -250,12 +266,12 @@ struct ContentView: View {
                                     .stroke(hasActiveFilters ? AgrasandhaniTheme.Colors.divineAccent.opacity(0.3) : Color.clear, lineWidth: 1)
                             )
                     )
-                    .contentShape(Rectangle()) // Make entire area tappable
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
             .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
-            .padding(.vertical, AgrasandhaniTheme.Spacing.sm)
+            .padding(.vertical, AgrasandhaniTheme.Spacing.xs)
             .background(
                 RoundedRectangle(cornerRadius: AgrasandhaniTheme.CornerRadius.medium)
                     .fill(AgrasandhaniTheme.Colors.cardBackground)
@@ -265,7 +281,7 @@ struct ContentView: View {
                     )
             )
             .padding(.horizontal, AgrasandhaniTheme.Spacing.md)
-            .padding(.vertical, AgrasandhaniTheme.Spacing.xs)
+            .padding(.vertical, AgrasandhaniTheme.Spacing.xxs)
             .background(AgrasandhaniTheme.Colors.secondaryBackground)
             
             Divider()
@@ -282,6 +298,7 @@ struct ContentView: View {
         }
     }
     
+    
     // Helper computed properties
     private var hasActiveFilters: Bool {
         selectedDateFilter != .all || selectedStatusFilter != .all || selectedPriorityFilter != nil
@@ -297,10 +314,17 @@ struct ContentView: View {
     private var tasksList: some View {
         List {
             ForEach(filteredTasks) { task in
-                TaskRowView(task: task, isDarkMode: isDarkMode)
-                    .listRowBackground(AgrasandhaniTheme.Colors.primaryBackground)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: AgrasandhaniTheme.Spacing.xs, leading: AgrasandhaniTheme.Spacing.md, bottom: AgrasandhaniTheme.Spacing.xs, trailing: AgrasandhaniTheme.Spacing.md))
+                HierarchicalTaskRowView(task: task, isDarkMode: isDarkMode) { selectedTask in
+                    // Handle task tap - open detail sidebar
+                    print("DEBUG: Selected task: \(selectedTask.title ?? "nil") with ID: \(selectedTask.objectID)")
+                    selectedTaskForDetail = selectedTask
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showingTaskDetail = true
+                    }
+                }
+                .listRowBackground(AgrasandhaniTheme.Colors.primaryBackground)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: AgrasandhaniTheme.Spacing.xs, leading: AgrasandhaniTheme.Spacing.md, bottom: AgrasandhaniTheme.Spacing.xs, trailing: AgrasandhaniTheme.Spacing.md))
             }
             .onDelete(perform: deleteTasks)
         }
@@ -315,24 +339,28 @@ struct ContentView: View {
         Button {
             showingAddTask = true
         } label: {
-            HStack(spacing: 4) {
-                Image(systemName: "plus")
+            HStack(spacing: 6) {
+                Image(systemName: "plus.circle.fill")
                     .font(.caption)
                     .fontWeight(.semibold)
                 Text("Add Task")
                     .font(.caption)
                     .fontWeight(.semibold)
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(
                 Capsule()
                     .fill(AgrasandhaniTheme.Colors.divineAccent)
+                    .shadow(color: AgrasandhaniTheme.Colors.divineAccent.opacity(0.4), radius: 6, x: 0, y: 3)
             )
-            .foregroundColor(Color.white)
+            .foregroundColor(isDarkMode ? .black : .white)
         }
         .buttonStyle(.plain)
+        .scaleEffect(1.0)
+        .animation(.easeInOut(duration: 0.15), value: showingAddTask)
     }
+    
     
     // MARK: - Theme Toggle Button  
     private var themeToggleButton: some View {
@@ -421,6 +449,9 @@ struct ContentView: View {
     private var filteredTasks: [Task] {
         var filtered = Array(tasks)
         
+        // Show only main tasks (parentTask == nil) - subtasks will be shown hierarchically
+        filtered = filtered.filter { $0.isMainTask }
+        
         // Apply category filter (existing functionality)
         if let selectedCategory = selectedCategory {
             filtered = filtered.filter { $0.categoryEnum == selectedCategory }
@@ -502,16 +533,19 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Task Row View (Completely Rewritten)
+// MARK: - Task Row View (Enhanced with Quick Actions)
 struct TaskRowView: View {
     @ObservedObject var task: Task
     @Environment(\.managedObjectContext) private var viewContext
     let isDarkMode: Bool
+    @StateObject private var quickActionManager = QuickActionManager.shared
     
     // Computed colors that will update when isDarkMode changes
     private var backgroundColor: Color {
-        if task.isCompleted {
-            return Color.green.opacity(0.1)
+        if quickActionManager.isSelected(task) {
+            return AgrasandhaniTheme.Colors.divineAccent.opacity(0.2)
+        } else if task.isCompleted {
+            return AgrasandhaniTheme.Colors.completedGreen.opacity(0.1)
         }
         return isDarkMode ? Color(red: 0.12, green: 0.12, blue: 0.18) : Color.white
     }
@@ -521,22 +555,40 @@ struct TaskRowView: View {
     }
     
     private var borderColor: Color {
-        return task.isCompleted ? Color.green : (isDarkMode ? Color.yellow : Color.orange)
+        if quickActionManager.isSelected(task) {
+            return AgrasandhaniTheme.Colors.divineAccent
+        } else if task.isCompleted {
+            return AgrasandhaniTheme.Colors.completedGreen
+        }
+        return isDarkMode ? Color.yellow : Color.orange
     }
     
     var body: some View {
         HStack(spacing: 16) {
-            // Completion Button
-            Button {
-                task.isCompleted.toggle()
-                task.completedDate = task.isCompleted ? Date() : nil
-                try? viewContext.save()
-            } label: {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.title3)
-                    .foregroundColor(task.isCompleted ? Color.green : textColor)
+            // Selection/Completion area
+            HStack(spacing: 8) {
+                if quickActionManager.isMultiSelectMode {
+                    // Selection checkbox
+                    Button {
+                        quickActionManager.toggleSelection(for: task)
+                    } label: {
+                        Image(systemName: quickActionManager.isSelected(task) ? "checkmark.square.fill" : "square")
+                            .font(.title3)
+                            .foregroundColor(quickActionManager.isSelected(task) ? AgrasandhaniTheme.Colors.divineAccent : textColor)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    // Completion Button
+                    Button {
+                        quickActionManager.quickCompleteTask(task, viewContext: viewContext)
+                    } label: {
+                        Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                            .font(.title3)
+                            .foregroundColor(task.isCompleted ? AgrasandhaniTheme.Colors.completedGreen : textColor)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            .buttonStyle(.plain)
             
             // Task Content
             VStack(alignment: .leading, spacing: 4) {
@@ -581,6 +633,12 @@ struct TaskRowView: View {
                     }
                 }
             }
+            
+            // Quick Actions (only show when not in multi-select mode)
+            if !quickActionManager.isMultiSelectMode {
+                QuickActionsView(task: task)
+                    .environmentObject(ThemeManager.shared)
+            }
         }
         .padding(16)
         .background(
@@ -589,10 +647,72 @@ struct TaskRowView: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(borderColor.opacity(0.3), lineWidth: 1)
+                .stroke(borderColor.opacity(quickActionManager.isSelected(task) ? 0.8 : 0.3), lineWidth: quickActionManager.isSelected(task) ? 2 : 1)
         )
+        .contextMenu {
+            TaskContextMenu(task: task)
+        }
+        .onTapGesture {
+            if quickActionManager.isMultiSelectMode {
+                quickActionManager.toggleSelection(for: task)
+            }
+        }
         .animation(.easeInOut(duration: 0.2), value: isDarkMode)
         .animation(.easeInOut(duration: 0.3), value: task.isCompleted)
+        .animation(.easeInOut(duration: 0.2), value: quickActionManager.isSelected(task))
+    }
+}
+
+// MARK: - Task Context Menu
+struct TaskContextMenu: View {
+    let task: Task
+    @Environment(\.managedObjectContext) private var viewContext
+    @StateObject private var quickActionManager = QuickActionManager.shared
+    
+    var body: some View {
+        VStack {
+            Button(task.isCompleted ? "Mark Incomplete" : "Mark Complete") {
+                quickActionManager.quickCompleteTask(task, viewContext: viewContext)
+            }
+            
+            Button("Duplicate") {
+                quickActionManager.quickDuplicateTask(task, viewContext: viewContext)
+            }
+            
+            Menu("Priority") {
+                ForEach(TaskPriority.allCases, id: \.self) { priority in
+                    Button {
+                        quickActionManager.quickChangePriority(task, to: priority, viewContext: viewContext)
+                    } label: {
+                        HStack {
+                            Image(systemName: priority.icon)
+                            Text(priority.displayName)
+                            if task.priorityEnum == priority {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            }
+            
+            Menu("Schedule") {
+                Button("Today") {
+                    quickActionManager.scheduleForToday(task, viewContext: viewContext)
+                }
+                Button("Tomorrow") {
+                    quickActionManager.scheduleForTomorrow(task, viewContext: viewContext)
+                }
+                Button("This Week") {
+                    quickActionManager.scheduleForThisWeek(task, viewContext: viewContext)
+                }
+            }
+            
+            Divider()
+            
+            Button("Delete", role: .destructive) {
+                quickActionManager.quickDeleteTask(task, viewContext: viewContext)
+            }
+        }
     }
 }
 
