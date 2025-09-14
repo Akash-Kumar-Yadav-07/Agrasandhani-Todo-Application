@@ -202,15 +202,51 @@ struct HierarchicalTaskRowView: View {
                         addSubTask()
                     }
                 
-                Button("Add") {
+                // Add Button
+                Button {
                     addSubTask()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.caption2)
+                        Text("Add")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(AgrasandhaniTheme.Colors.divineAccent)
+                    )
+                    .foregroundColor(isDarkMode ? .black : .white)
                 }
+                .buttonStyle(.plain)
                 .disabled(newSubTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .opacity(newSubTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1.0)
                 
-                Button("Cancel") {
+                // Cancel Button
+                Button {
                     showingAddSubTask = false
                     newSubTaskTitle = ""
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "xmark.circle")
+                            .font(.caption2)
+                        Text("Cancel")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(AgrasandhaniTheme.Colors.cardBackground)
+                            .stroke(AgrasandhaniTheme.Colors.secondaryText.opacity(0.3), lineWidth: 1)
+                    )
+                    .foregroundColor(AgrasandhaniTheme.Colors.secondaryText)
                 }
+                .buttonStyle(.plain)
             }
             .padding(8)
             .background(
